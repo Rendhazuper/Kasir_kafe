@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('menus', {
-      id: {
+    await queryInterface.createTable('menu', {
+      id_menu: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       jenis: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM('makanan', 'minuman')
       },
       deskripsi: {
         type: Sequelize.DOUBLE
@@ -35,6 +35,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('menus');
+    await queryInterface.dropTable('menu');
   }
 };

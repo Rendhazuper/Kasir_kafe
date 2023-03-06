@@ -11,17 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.detail_transaksi,{
+        foreignKey:"id_menu",
+        as : "menu"
+      })
     }
   }
   menu.init({
+    id_menu : { 
+      type : DataTypes.INTEGER,
+      primaryKey:true
+    },
     nama_menu: DataTypes.STRING,
-    jenis: DataTypes.ENUM,
+    jenis: DataTypes.ENUM('makanan', 'minuman'),
     deskripsi: DataTypes.DOUBLE,
     gambar: DataTypes.STRING,
     harga: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'menu',
+    tableName: 'menu'
   });
   return menu;
 };

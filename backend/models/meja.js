@@ -11,13 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.transaksi,{
+        foreignKey:"id_meja",
+        as : "meja",
+      });
     }
   }
   meja.init({
+    id_meja : { 
+      type : DataTypes.INTEGER,
+      primaryKey:true
+    },
     nomor_meja: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'meja',
+    tableName: 'meja'
   });
   return meja;
 };

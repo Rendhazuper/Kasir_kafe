@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "Kasir_cafe",
+    "database": "kasir_cafe",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

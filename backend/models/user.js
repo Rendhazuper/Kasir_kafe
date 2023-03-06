@@ -11,16 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.transaksi,{
+        foreignKey:"id_user",
+        as : "transaksi user"
+      })
     }
   }
   user.init({
+    id_user : { 
+      type : DataTypes.INTEGER,
+      primaryKey:true
+    },
     nama_user: DataTypes.STRING,
-    role: DataTypes.ENUM,
+    role: DataTypes.ENUM('admin', 'kasir', 'manajer'),
     username: DataTypes.STRING,
     password: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'user',
+    tableName: 'user'
   });
   return user;
 };
