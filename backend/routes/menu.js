@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const md5 = require('md5');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 //implementasi library
 const app = express();
@@ -14,7 +16,7 @@ const menu = model.menu
 
 //endpoint untuk menyimpan data admin, METHOD: POST, function: create
 //endpoint menampilkan semua data admin, method: GET, function: findAll()
-app.get("/", (req,res) => {
+app.get("/", auth, (req,res) => {
     menu.findAll()
         .then(result => {
             res.json({
@@ -89,6 +91,34 @@ app.delete("/:id", (req,res) => {
                 message: error.message
             })
         })
+})
+
+app.post("/search", async (req, res) => {
+    let keyword = req.body.keyword
+    let result = await menu.findAll({
+        where: {
+            [Op.or]: [
+                {
+                    id_menu: {
+                        [Op.like]: `%${keyword}%`
+                    }
+                },
+                {
+                    nama_menu: {
+                        [Op.like]: `%${keyword}%`
+                    }
+                },
+                {
+                    jenis: {
+                        [Op.like]: `%${keyword}%`
+                    }
+                }
+            ]
+        },
+    })
+    res.json({
+        menu: result
+    })
 })
 
 module.exports = app

@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const md5 = require('md5');
+const auth = require("../auth");
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "wikusama"
 
 //implementasi library
 const app = express();
@@ -14,7 +17,7 @@ const user = model.user
 
 //endpoint untuk menyimpan data admin, METHOD: POST, function: create
 //endpoint menampilkan semua data admin, method: GET, function: findAll()
-app.get("/", (req,res) => {
+app.get("/",  (req,res) => {
     user.findAll()
         .then(result => {
             res.json({
@@ -27,6 +30,46 @@ app.get("/", (req,res) => {
             })
         })
 })
+app.post("/logout", async (req, res) => {
+    
+    res.clearCookie("jwt");
+    res.json({
+      message: "logout berhasil",
+    });
+  });
+
+app.post("/auth", async (req, res) => {
+    let data = {
+        username: req.body.username,
+        password: md5(req.body.password)
+    }
+    // mencari data admin yang username dan passwordnya sama dengan inputan
+    let result = await user.findOne({ where: data })
+    if (result) {
+        // jika ditemukan, set payload data
+        let payload = JSON.stringify({
+            id_user: result.id_user,
+            nama_user: result.nama_user,
+            username: result.username
+        })
+        // generate token based on payload and secret key
+        let token = jwt.sign(payload, SECRET_KEY)
+        // set output 
+        res.json({
+            logged: true,
+            data: result,
+            token: token
+        })
+    }
+    else {
+        // jike tidak ditemukan 
+        res.json({
+            logged: false,
+            message: "invalid username or password"
+        })
+    }
+})
+
 
 app.post("/", (req,res) => {
     let data = {
